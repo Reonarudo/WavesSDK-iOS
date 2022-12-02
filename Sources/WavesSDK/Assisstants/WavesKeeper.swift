@@ -10,6 +10,14 @@ import Foundation
 import WavesSDKCrypto
 import RxSwift
 
+#if os(macOS)
+import Cocoa
+#elseif os(iOS)
+import UIKit
+#elseif os(Linux)
+#else
+#endif
+
 extension WavesKeeper {
     private class RequestOperation {
         let request: WavesKeeper.Request
@@ -97,7 +105,7 @@ private extension WavesKeeper {
         self.operations[request.id] = operation
 
       print("🔹 Open URL:\(url)")
-        /*
+
         UIApplication.shared.open(url, options: .init(), completionHandler: { [weak self] result in
             if result == false {
                 
@@ -108,7 +116,7 @@ private extension WavesKeeper {
                 self?.removeOperation(request.id)
             }
         })
-         */
+
         
         return replaySubject.asObserver()
     }
