@@ -102,26 +102,37 @@ public extension NetworkError {
             case let .createURLRequestFailed(error: error):
                 return NetworkError.error(by: error)
             case let .downloadedFileMoveFailed(error: error, source: source, destination: destination):
+                (_, _) = (source, destination)
                 return NetworkError.error(by: error)
             case .explicitlyCancelled:
                 return NetworkError.canceled
             case let .invalidURL(url: url):
+                _ = url
                 return NetworkError.message(code: 9001)
             case let .multipartEncodingFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9002)
             case let .parameterEncodingFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9003)
             case let .parameterEncoderFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9004)
             case let .requestAdaptationFailed(error: error):
+                _ = error
                 return NetworkError.message(code: 9005)
             case let .requestRetryFailed(retryError: retryError, originalError: originalError):
+                _ = retryError
+                _ = originalError
                 return NetworkError.message(code: 9006)
             case let .responseValidationFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9007)
             case let .responseSerializationFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9008)
             case let .serverTrustEvaluationFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9009)
             case .sessionDeinitialized:
                 return NetworkError.internetNotWorking
@@ -134,9 +145,8 @@ public extension NetworkError {
             case let .sessionTaskFailed(error: error):
                 return NetworkError.error(by: error)
             case let .urlRequestValidationFailed(reason: reason):
+                _ = reason
                 return NetworkError.message(code: 9010)
-            @unknown default:
-                return NetworkError.message(code: 9011)
             }
 
         case let urlError as NSError where urlError.domain == NSURLErrorDomain:

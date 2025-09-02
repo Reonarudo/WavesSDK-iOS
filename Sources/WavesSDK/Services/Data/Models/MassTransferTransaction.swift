@@ -8,8 +8,8 @@
 
 import Foundation
 
-// Скопированаая DTO из extension NodeService.DTO {
-// разница между ними в fee (int64 и double)
+// Copied DTO from extension NodeService.DTO {
+// difference between them in fee (int64 and double)
 extension DataService.DTO {
     
     /**
@@ -26,7 +26,7 @@ extension DataService.DTO {
       Fee depends of mass transactions count
       0.001 + 0.0005 × N, N is the number of transfers inside of a transaction
      */
-    public struct MassTransferTransaction: Codable {
+    public struct MassTransferTransaction: Codable, Identifiable {
 
         /**
           * The item of the Mass-transfer transaction

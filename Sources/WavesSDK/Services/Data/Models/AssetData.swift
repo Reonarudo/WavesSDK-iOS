@@ -9,7 +9,7 @@
 import Foundation
 
 public extension DataService.DTO {
-    struct Asset: Decodable {
+    struct Asset: Decodable, Identifiable {
         public let ticker: String?
         public let id: String
         public let name: String
@@ -23,4 +23,11 @@ public extension DataService.DTO {
         public let hasScript: Bool
         public let minSponsoredFee: Int64?
     }
+
+}
+
+extension DataService.DTO.Asset: Hashable {
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
 }
