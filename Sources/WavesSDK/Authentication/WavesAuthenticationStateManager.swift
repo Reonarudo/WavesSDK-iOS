@@ -98,11 +98,17 @@ public extension WavesAuthenticationStateManager {
     
     /// Check if authentication is in progress
     var isAuthenticating: Bool {
-        return currentState == .authenticating
+        if case .authenticating = currentState {
+            return true
+        }
+        return false
     }
     
     /// Check if sign out is in progress
     var isSigningOut: Bool {
-        return currentState == .signingOut
+        if case .signingOut = currentState {
+            return true
+        }
+        return false
     }
 }

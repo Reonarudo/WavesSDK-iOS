@@ -90,7 +90,7 @@ public struct WavesAuthenticatedUser: Equatable, Codable {
 }
 
 /// Signed transaction result from any authenticator
-public struct WavesSignedTransaction: Equatable {
+public struct WavesSignedTransaction {
     /// Original transaction that was signed
     public let transaction: NodeService.Query.Transaction
     
@@ -149,7 +149,7 @@ public struct WavesAccount: Equatable, Codable, Identifiable {
 }
 
 /// Authentication states for reactive UI updates
-public enum WavesAuthenticationState: Equatable {
+public enum WavesAuthenticationState {
     case idle
     case authenticating
     case authenticated(user: WavesAuthenticatedUser)

@@ -10,6 +10,14 @@ import Foundation
 import WavesSDKCrypto
 import RxSwift
 
+#if os(macOS)
+import Cocoa
+#elseif os(iOS)
+import UIKit
+#elseif os(Linux)
+#else
+#endif
+
 extension WavesKeeper {
     private class RequestOperation {
         let request: WavesKeeper.Request

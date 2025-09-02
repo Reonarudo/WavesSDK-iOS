@@ -16,10 +16,10 @@ open class BaseWavesAuthenticator: WavesAuthenticator {
     public let stateManager = WavesAuthenticationStateManager()
     
     /// Crypto instance for signing operations
-    protected let crypto: WavesCrypto
+    internal let crypto: WavesCrypto
     
     /// Current chain ID
-    protected var chainId: UInt8
+    internal var chainId: UInt8
     
     public init(chainId: UInt8 = 87) { // Default to mainnet (87 = 'W')
         self.crypto = WavesCrypto.shared
@@ -111,24 +111,24 @@ open class BaseWavesAuthenticator: WavesAuthenticator {
     // MARK: - Abstract Helper Methods (Must be implemented by subclasses)
     
     /// Get private key for signing - must be implemented by subclasses
-    protected func getPrivateKeyForSigning() async throws -> String {
+    internal func getPrivateKeyForSigning() async throws -> String {
         fatalError("getPrivateKeyForSigning() must be implemented by subclasses")
     }
     
     // MARK: - Helper Methods
     
     /// Generate Waves address from public key
-    protected func generateAddress(publicKey: String, chainId: UInt8? = nil) -> String? {
+    internal func generateAddress(publicKey: String, chainId: UInt8? = nil) -> String? {
         return crypto.address(publicKey: publicKey, chainId: chainId ?? self.chainId)
     }
     
     /// Validate Waves address
-    protected func validateAddress(_ address: String, chainId: UInt8? = nil, publicKey: String? = nil) -> Bool {
+    internal func validateAddress(_ address: String, chainId: UInt8? = nil, publicKey: String? = nil) -> Bool {
         return crypto.verifyAddress(address: address, chainId: chainId ?? self.chainId, publicKey: publicKey)
     }
     
     /// Verify signature
-    protected func verifySignature(publicKey: String, bytes: [UInt8], signature: [UInt8]) -> Bool {
+    internal func verifySignature(publicKey: String, bytes: [UInt8], signature: [UInt8]) -> Bool {
         return crypto.verifySignature(publicKey: publicKey, bytes: bytes, signature: signature)
     }
     
@@ -153,27 +153,27 @@ open class BaseWavesAuthenticator: WavesAuthenticator {
 extension BaseWavesAuthenticator {
     
     /// Helper to set authenticated state
-    protected func setAuthenticated(user: WavesAuthenticatedUser) {
+    internal func setAuthenticated(user: WavesAuthenticatedUser) {
         stateManager.setAuthenticated(user: user)
     }
     
     /// Helper to set failed state
-    protected func setFailed(error: WavesAuthenticatorError) {
+    internal func setFailed(error: WavesAuthenticatorError) {
         stateManager.setFailed(error: error)
     }
     
     /// Helper to set authenticating state
-    protected func setAuthenticating() {
+    internal func setAuthenticating() {
         stateManager.setAuthenticating()
     }
     
     /// Helper to set idle state
-    protected func setIdle() {
+    internal func setIdle() {
         stateManager.setIdle()
     }
     
     /// Helper to set signing out state
-    protected func setSigningOut() {
+    internal func setSigningOut() {
         stateManager.setSigningOut()
     }
 }
