@@ -36,8 +36,9 @@ xcuserdata/
 timeline.xctimeline
 playground.xcworkspace
 
-# CocoaPods
-Pods/
+# Swift Package Manager
+.build/
+Package.resolved
 *.xcworkspace
 
 # Temp

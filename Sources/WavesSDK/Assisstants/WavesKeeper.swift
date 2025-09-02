@@ -103,10 +103,10 @@ private extension WavesKeeper {
                                          response: replaySubject)
         
         self.operations[request.id] = operation
-
-      print("🔹 Open URL:\(url)")
-
-        UIApplication.shared.open(url, options: .init(), completionHandler: { [weak self] result in
+        
+#if canImport(UIKit)
+        print("🔹 Open URL:\(url)")
+        UIApplication.shared.open(url, options: .init(), completionHandler: { [weak self] (result: Bool) in
             if result == false {
                 
                 guard let operation = self?.operations[request.id] else { return }
@@ -116,7 +116,13 @@ private extension WavesKeeper {
                 self?.removeOperation(request.id)
             }
         })
-
+#else
+        // On non-iOS platforms, simulate failure
+        operation.response.onNext(WavesKeeper.Response(requestId: request.id,
+                                                      kind: .error(WavesKeeper.Error.wavesKeeperDontInstall(WavesSDKConstants.appstoreURL))))
+        operation.response.onCompleted()
+        self.removeOperation(request.id)
+#endif
         
         return replaySubject.asObserver()
     }
