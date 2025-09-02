@@ -8,7 +8,6 @@
 import Foundation
 import Moya
 import WavesSDKCrypto
-import WavesSDKExtensions
 
 /// Enhanced WavesSDK that supports pluggable authentication
 @MainActor
@@ -77,21 +76,12 @@ public final class WavesSDKWithAuth {
         environment: WavesEnvironment,
         authenticator: WavesAuthenticator? = nil
     ) {
-        var dataPlugins = servicesPlugins.data
-        var nodePlugins = servicesPlugins.node
-        var matcherPlugins = servicesPlugins.matcher
-        
-        // Add debug plugin like original WavesSDK
-        let debugPlugin = DebugServicePlugin()
-        dataPlugins.append(debugPlugin)
-        nodePlugins.append(debugPlugin)
-        matcherPlugins.append(debugPlugin)
-        
+        // Use plugins as provided - WavesServices will add debug plugins internally if needed
         let services = WavesServices(
             enviroment: environment,
-            dataServicePlugins: dataPlugins,
-            nodeServicePlugins: nodePlugins,
-            matcherServicePlugins: matcherPlugins
+            dataServicePlugins: servicesPlugins.data,
+            nodeServicePlugins: servicesPlugins.node,
+            matcherServicePlugins: servicesPlugins.matcher
         )
         
         self.init(services: services, environment: environment, authenticator: authenticator)
@@ -272,21 +262,5 @@ public extension WavesSDKWithAuth {
     }
 }
 
-// MARK: - Debug Service Plugin (Internal)
-
-/// Internal debug plugin - copy of the one from original WavesSDK
-private final class DebugServicePlugin: PluginType {
-    func prepare(_ request: URLRequest, target: TargetType) -> URLRequest {
-        var mRequest = request
-        let bundle = Bundle.main.bundleIdentifier ?? ""
-        let userAgent = "WavesSDKWithAuth/1.0 AppId/\(bundle)"
-        mRequest.setValue(userAgent, forHTTPHeaderField: "User-Agent")
-        return mRequest
-    }
-    
-    func willSend(_ request: RequestType, target: TargetType) {}
-    func didReceive(_ result: Result<Moya.Response, MoyaError>, target: TargetType) {}
-    func process(_ result: Result<Moya.Response, MoyaError>, target: TargetType) -> Result<Moya.Response, MoyaError> {
-        return result
-    }
-}
+// MARK: - Debug Service Plugin
+// Using the DebugServicePlugin from WavesSDK.swift to avoid duplication

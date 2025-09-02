@@ -15,7 +15,10 @@
 #define crypto_generichash_blake2b_KEYBYTES_MAX  64U
 #define crypto_generichash_blake2b_BLOCKBYTES   128U
 
-#if defined(_MSC_VER)
+#if defined(__arm64__) || defined(__aarch64__)
+// ARM64: Remove alignment to avoid array element size issues
+# define CRYPTO_ALIGN(x) /* no forced alignment */
+#elif defined(_MSC_VER)
 # define CRYPTO_ALIGN(x) __declspec(align(x))
 #else
 # define CRYPTO_ALIGN(x) __attribute__((aligned(x)))

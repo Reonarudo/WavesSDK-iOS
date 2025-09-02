@@ -26,7 +26,10 @@
 #define blake2b_final      crypto_generichash_blake2b__final
 #define blake2b            crypto_generichash_blake2b__blake2b
 
-#if defined(_MSC_VER)
+#if defined(__arm64__) || defined(__aarch64__)
+// ARM64: Remove alignment to avoid array element size issues
+#define ALIGN(x) /* no forced alignment */
+#elif defined(_MSC_VER)
 #define ALIGN(x) __declspec(align(x))
 #else
 #define ALIGN(x) __attribute__((aligned(x)))

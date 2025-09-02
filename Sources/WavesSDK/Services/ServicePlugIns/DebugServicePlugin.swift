@@ -7,7 +7,12 @@
 
 import Foundation
 import Moya
+#if canImport(WebKit)
 import WebKit
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /**
  *
@@ -18,12 +23,15 @@ import WebKit
 final class DebugServicePlugin: PluginType {
   private var userAgent: String = ""
 
+  #if canImport(WebKit)
   private var webView: WKWebView?
+  #endif
 
   static let serialQueue = DispatchQueue(label: "DebugServicePlugin")
   static let serialQueueWebView = DispatchQueue(label: "DebugServicePlugin.webView")
 
   init() {
+    #if canImport(WebKit) && canImport(UIKit)
     DispatchQueue.main.async { [weak self] in
       self?.webView = WKWebView(frame: CGRect.zero)
       self?.webView?.evaluateJavaScript("navigator.userAgent", completionHandler: { [weak self] result, _ in
@@ -34,6 +42,7 @@ final class DebugServicePlugin: PluginType {
         }
       })
     }
+    #endif
   }
 
   func prepare(_ request: URLRequest, target _: TargetType) -> URLRequest {
@@ -41,12 +50,13 @@ final class DebugServicePlugin: PluginType {
 
     let bundle = Bundle.main.bundleIdentifier ?? ""
 
-    // 0 -> WavesSDKVersionNumber
-    let requestUserAgent = "\(userAgent) WavesSDK/\(0) DeviceId/\(WavesDevice.uuid) AppId/\(bundle)"
+    #if canImport(UIKit)
+    let requestUserAgent = "\(userAgent) WavesSDK/\(WavesSDKVersionNumber) DeviceId/\(UIDevice.uuid) AppId/\(bundle)"
+    #else
+    let requestUserAgent = "\(userAgent) WavesSDK/\(WavesSDKVersionNumber) AppId/\(bundle)"
+    #endif
 
     mRq.setValue(requestUserAgent, forHTTPHeaderField: "User-Agent")
-
-    print(mRq)
 
     return mRq
   }
